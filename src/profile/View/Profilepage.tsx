@@ -12,7 +12,7 @@ import {
 
 import { TextInput, Button, Avatar } from 'react-native-paper';
 
-const Profilepage = () => {
+const Profilepage = ({navigation}) => {
   const [user, setUser] = useState(fakeUser);
 
   return (
@@ -46,7 +46,7 @@ const Profilepage = () => {
       <Text>
         Cet utilisateur a {user.correction_point} points de corrections
       </Text>
-      <Button onPress={() => console.log('disconnect')}>
+      <Button onPress={() => navigation.navigate('Authentification')}>
         Se déconnecter
       </Button>
     </View>

@@ -32,10 +32,10 @@ function App(): React.JSX.Element {
         <Stack.Navigator>
           <Stack.Screen
             name="Authentification"
-            component={Profilepage}
+            component={Authpage}
             options={{title: 'Authentification'}}
           />
-          {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
+          <Stack.Screen name="Profile" component={Profilepage} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

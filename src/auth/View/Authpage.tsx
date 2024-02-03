@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Authpage = () => {
+const Authpage = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -53,7 +53,7 @@ const Authpage = () => {
         onChangeText={text => setPassword(text)}
         value={password}
       />
-      <Button mode="contained" onPress={login}>
+      <Button mode="contained" onPress={() => navigation.navigate("Profile")}>
         Se connecter
       </Button>
     </View>
