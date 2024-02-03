@@ -21,6 +21,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider as PaperProvider} from 'react-native-paper';
 
 import Authpage from './src/auth/View/Authpage';
+import Profilepage from './src/profile/View/Profilepage';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,7 +32,7 @@ function App(): React.JSX.Element {
         <Stack.Navigator>
           <Stack.Screen
             name="Authentification"
-            component={Authpage}
+            component={Profilepage}
             options={{title: 'Authentification'}}
           />
           {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
