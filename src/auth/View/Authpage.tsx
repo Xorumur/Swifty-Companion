@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -12,7 +12,7 @@ import {
 
 import {TextInput, Button} from 'react-native-paper';
 
-import { auth } from '../../services/auth'
+import { auth, retrieveTokens } from '../../services/auth'
 
 const styles = StyleSheet.create({
   input: {
@@ -34,9 +34,20 @@ const styles = StyleSheet.create({
 
 const Authpage = ({navigation}) => {
 	const login = async () => {
-		await auth();
-		navigation.navigate("Profile")
+		const res = await auth();
+		if (res)
+			navigation.navigate("Profile")
 	};
+
+	// on mount
+	useEffect(() => {
+		const checkIfAuthed = async () => {
+			const tokens = await retrieveTokens();
+			if (tokens)
+				navigation.navigate("Profile")
+		}
+		checkIfAuthed();
+	}, []);
 
   return (
     <View style={styles.container}>

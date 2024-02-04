@@ -20,7 +20,6 @@ const Profilepage = ({navigation}) => {
 
 	async function onPressSearch() {
 		const user = await searchQuery(search);
-		console.log(user);
 		setUser(user);
 	}
 

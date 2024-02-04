@@ -16,14 +16,19 @@ const config = {
 };
 
 export async function auth() {
-	console.log("Config oauth2 ->", config);
+	const tokens = await retrieveTokens();
+
+	if (tokens)
+		return tokens;
+
 	try {
 		const result = await authorize(config);
 		storeTokens(result.accessToken, result.refreshToken);
 		return result;
 	}
 	catch (error) {
-		console.error(error);
+		console.log(error);
+		return null;
 	}
 }
 
@@ -34,7 +39,7 @@ export async function storeTokens(accessToken, refreshToken) {
 		await AsyncStorage.setItem('refresh_token', refreshToken);
 	}
 	catch (error) {
-		console.error(error);
+		console.log(error);
 	}
 }
 
@@ -42,9 +47,52 @@ export async function storeTokens(accessToken, refreshToken) {
 export async function retrieveTokens() {
 	try {
 		const token = await AsyncStorage.getItem('access_token');
-		return token;
+		const refreshToken = await AsyncStorage.getItem('refresh_token');
+		
+		if (token == null || refreshToken == null)
+			return null;
+
+		const newTokensIfNeeded = await refreshTokenIfNeeded();
+
+		if (newTokensIfNeeded)
+			return newTokensIfNeeded;
+
+		return { token, refreshToken };
 	}
 	catch (error) {
-		console.error(error);
+		console.log("retrieveTokens error ->", error);
+		return null;
 	}
+}
+
+export async function refreshTokenIfNeeded() {
+
+	const token = await AsyncStorage.getItem('access_token');
+	const refreshToken = await AsyncStorage.getItem('refresh_token');
+
+	// Check if the token is expired
+	const tokenCheckRes = await fetch('https://api.intra.42.fr/v2/me', {
+		headers: { Authorization: `Bearer ${token}` }
+	});
+	
+	const tokenCheckData = await tokenCheckRes.json();
+
+	// No error means the token is still valid so return null
+	if (!tokenCheckData.error)
+		return null;
+
+	// Refresh token when there is an error -> means the access token is expired
+	const response = await fetch('https://api.intra.42.fr/oauth/token', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		body: `grant_type=refresh_token&client_id=${Config.CLIENT_ID}&client_secret=${Config.CLIENT_SECRET}&refresh_token=${refreshToken}`,
+	});
+
+	const data = await response.json();
+
+	console.log("=> Refreshed token: ", data.access_token, data.refresh_token)
+
+	await storeTokens(data.access_token, data.refresh_token);
+
+	return { token: data.access_token, refreshToken: data.refresh_token};
 }
