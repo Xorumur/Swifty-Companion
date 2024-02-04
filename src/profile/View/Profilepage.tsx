@@ -17,10 +17,14 @@ const Profilepage = ({navigation}) => {
 	
 	const [user, setUser] = useState(undefined);
 	const [search, setSearch] = useState('');
+	const [hasChanged, setHasChanged] = useState(false);
 
 	async function onPressSearch() {
+		if (!hasChanged)
+			return;
 		const user = await searchQuery(search);
 		setUser(user);
+		setHasChanged(false);
 	}
 
 	return (
@@ -29,7 +33,7 @@ const Profilepage = ({navigation}) => {
 			<TextInput
 				style={styles.input}
 				label={'search'}
-				onChangeText={(val) => setSearch(val)}
+				onChangeText={(val) => { setSearch(val); setHasChanged(true); }}
 				value={search} />
 			<Button mode="contained" onPress={onPressSearch}>
 				Search
