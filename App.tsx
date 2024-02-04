@@ -33,9 +33,9 @@ function App(): React.JSX.Element {
           <Stack.Screen
             name="Authentification"
             component={Authpage}
-            options={{title: 'Authentification'}}
+            options={{title: 'Welcome'}}
           />
-          <Stack.Screen name="Profile" component={Profilepage} />
+          <Stack.Screen name="Profile" component={Profilepage} options={{title: 'Search'}} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

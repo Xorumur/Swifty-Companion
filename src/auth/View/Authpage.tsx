@@ -12,6 +12,8 @@ import {
 
 import {TextInput, Button} from 'react-native-paper';
 
+import { auth } from '../../services/auth'
+
 const styles = StyleSheet.create({
   input: {
     height: 40,
@@ -31,30 +33,15 @@ const styles = StyleSheet.create({
 });
 
 const Authpage = ({navigation}) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const login = () => {
-    console.log('username', username);
-    console.log('password', password);
-  };
+	const login = async () => {
+		await auth();
+		navigation.navigate("Profile")
+	};
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        label="Username"
-        onChangeText={text => setUsername(text)}
-        value={username}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        onChangeText={text => setPassword(text)}
-        value={password}
-      />
-      <Button mode="contained" onPress={() => navigation.navigate("Profile")}>
-        Se connecter
+      <Button mode="contained" onPress={login}>
+		Login using 42
       </Button>
     </View>
   );

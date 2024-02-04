@@ -1,3 +1,7 @@
+# Custom
+.env
+src/services/config.js
+
 # OSX
 #
 .DS_Store
