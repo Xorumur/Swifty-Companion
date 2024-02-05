@@ -58,22 +58,20 @@ const Profilepage = ({navigation}) => {
 					<Avatar.Image size={100} source={{ uri: user.image.link }} />
 					<Text>{user.displayname}</Text>
 					<Text>{user.login}</Text>
+					<Text>{user.email}</Text>
 				</View>
 				<View>
-					<Text>Level : {user.cursus_users[1].level}</Text>
-					<Text>% : {Math.floor((user.cursus_users[1].level % 1) * 100)}%</Text>
+					{/* Make level a round number */}
+					<Text>Level : {Math.floor(user.cursus_users[1].level)} , {Math.floor((user.cursus_users[1].level % 1) * 100)}%</Text>
+					<Text>Wallet : {user.wallet} $</Text>
+					<Text>Eval Points : {user.correction_point}</Text>
 				</View>
 			</View>
-			<Text>{user.email}</Text>
-			<Text>Cet utilisateur a {user.wallet} points sur son wallet</Text>
-			<Text>
-				Cet utilisateur a {user.correction_point} points de corrections
-			</Text>
             <View style={styles.scrollContainer}>
-                <Text style={{color: 'red'}}>Projects</Text>
+                <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>Projects</Text>
                 <ScrollView>
                     {user.projects_users.map((project, index) => (
-                        <View style={styles.row}>
+                        <View key={project.project.name} style={styles.row}>
                             <Text>{project.project.name}</Text>
                             <Text style={{color: 'green'}}>{
                                 project.status === 'finished' ?
@@ -85,19 +83,16 @@ const Profilepage = ({navigation}) => {
                         </View>
                     ))}
                 </ScrollView>
-                <Text style={{color: 'red'}}>Skills</Text>
+                <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>Skills</Text>
                 <ScrollView>
                     {user.cursus_users[1].skills.map((skill, index) => (
-                        <View style={styles.row}>
+                        <View key={skill.name} style={styles.row}>
                             <Text>{skill.name}</Text>
                             <Text style={{color: 'green'}}>{skill.level}</Text>
                         </View>
                     ))}
                 </ScrollView>
                 </View>
-			<Button onPress={() => navigation.navigate('Authentification')}>
-				Se déconnecter
-			</Button>
 		</View>
 		)}
 	</View>
@@ -133,6 +128,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+	gap: 10
   },
     scroll: {
         flex: 1,

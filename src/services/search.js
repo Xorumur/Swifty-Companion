@@ -9,16 +9,12 @@ export async function searchQuery(username) {
 	});
 	const data = await response.json();
 
-    
-    console.log(data);
 	if (data.length == 0) return null;
-    
     
     const responseIdRequest = await fetch(`https://api.intra.42.fr/v2/users/${data[0].id}`, {
         headers: { Authorization: `Bearer ${tokens.token}` }
     });
 
-    // console.log(res.cursus_users[1].skills);
     try {
         const res = await responseIdRequest.json();
         return res;
@@ -33,9 +29,7 @@ export async function searchQuery(username) {
                 const res = await req.json();
                 done = true;
                 return res;
-            } catch (error) {
-                console.log("Error: ", error);
-            }
+            } catch (error) { }
         }
     }
 

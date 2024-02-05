@@ -27,7 +27,6 @@ export async function auth() {
 		return result;
 	}
 	catch (error) {
-		console.log(error);
 		return null;
 	}
 }
@@ -39,7 +38,6 @@ export async function storeTokens(accessToken, refreshToken) {
 		await AsyncStorage.setItem('refresh_token', refreshToken);
 	}
 	catch (error) {
-		console.log(error);
 	}
 }
 
@@ -60,7 +58,6 @@ export async function retrieveTokens() {
 		return { token, refreshToken };
 	}
 	catch (error) {
-		console.log("retrieveTokens error ->", error);
 		return null;
 	}
 }
@@ -75,9 +72,7 @@ export async function refreshTokenIfNeeded() {
         const tokenCheckRes = await fetch('https://api.intra.42.fr/v2/me', {
             headers: { Authorization: `Bearer ${token}` }
         });
-        
-        console.log("=> Token check: ", tokenCheckRes)
-    
+            
         const tokenCheckData = await tokenCheckRes.json();
     
         // No error means the token is still valid so return null
@@ -92,16 +87,9 @@ export async function refreshTokenIfNeeded() {
         });
     
         const data = await response.json();
-    
-        console.log("=> Refreshed token: ", data.access_token, data.refresh_token)
-    
+        
         await storeTokens(data.access_token, data.refresh_token);
     
         return { token: data.access_token, refreshToken: data.refresh_token};
-    } catch (error) {
-        console.log("refreshTokenIfNeeded error ->", error);
-        return null;
-    }
-
-	// Check if the token is expired
+    } catch (error) { return null; }
 }
