@@ -70,29 +70,38 @@ export async function refreshTokenIfNeeded() {
 	const token = await AsyncStorage.getItem('access_token');
 	const refreshToken = await AsyncStorage.getItem('refresh_token');
 
+    try {
+
+        const tokenCheckRes = await fetch('https://api.intra.42.fr/v2/me', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        console.log("=> Token check: ", tokenCheckRes)
+    
+        const tokenCheckData = await tokenCheckRes.json();
+    
+        // No error means the token is still valid so return null
+        if (!tokenCheckData.error)
+            return null;
+    
+        // Refresh token when there is an error -> means the access token is expired
+        const response = await fetch('https://api.intra.42.fr/oauth/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `grant_type=refresh_token&client_id=${Config.CLIENT_ID}&client_secret=${Config.CLIENT_SECRET}&refresh_token=${refreshToken}`,
+        });
+    
+        const data = await response.json();
+    
+        console.log("=> Refreshed token: ", data.access_token, data.refresh_token)
+    
+        await storeTokens(data.access_token, data.refresh_token);
+    
+        return { token: data.access_token, refreshToken: data.refresh_token};
+    } catch (error) {
+        console.log("refreshTokenIfNeeded error ->", error);
+        return null;
+    }
+
 	// Check if the token is expired
-	const tokenCheckRes = await fetch('https://api.intra.42.fr/v2/me', {
-		headers: { Authorization: `Bearer ${token}` }
-	});
-	
-	const tokenCheckData = await tokenCheckRes.json();
-
-	// No error means the token is still valid so return null
-	if (!tokenCheckData.error)
-		return null;
-
-	// Refresh token when there is an error -> means the access token is expired
-	const response = await fetch('https://api.intra.42.fr/oauth/token', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		body: `grant_type=refresh_token&client_id=${Config.CLIENT_ID}&client_secret=${Config.CLIENT_SECRET}&refresh_token=${refreshToken}`,
-	});
-
-	const data = await response.json();
-
-	console.log("=> Refreshed token: ", data.access_token, data.refresh_token)
-
-	await storeTokens(data.access_token, data.refresh_token);
-
-	return { token: data.access_token, refreshToken: data.refresh_token};
 }

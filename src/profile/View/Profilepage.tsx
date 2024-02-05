@@ -28,6 +28,7 @@ const Profilepage = ({navigation}) => {
 	}
 
 	return (
+
 	<View style={styles.container}>
 		<View  style={styles.searchContainer}>
 			<TextInput
@@ -58,16 +59,42 @@ const Profilepage = ({navigation}) => {
 					<Text>{user.displayname}</Text>
 					<Text>{user.login}</Text>
 				</View>
-				{/* <View>
-					<Text>Level : {user.cursus_users[0].level}</Text>
-					<Text>% : {Math.floor((user.cursus_users[0].level % 1) * 100)}%</Text>
-				</View> */}
+				<View>
+					<Text>Level : {user.cursus_users[1].level}</Text>
+					<Text>% : {Math.floor((user.cursus_users[1].level % 1) * 100)}%</Text>
+				</View>
 			</View>
 			<Text>{user.email}</Text>
 			<Text>Cet utilisateur a {user.wallet} points sur son wallet</Text>
 			<Text>
 				Cet utilisateur a {user.correction_point} points de corrections
 			</Text>
+            <View style={styles.scrollContainer}>
+                <Text>Projects</Text>
+                <ScrollView>
+                    {user.projects_users.map((project, index) => (
+                        <View style={styles.row}>
+                            <Text>{project.project.name}</Text>
+                            <Text style={{color: 'green'}}>{
+                                project.status === 'finished' ?
+                                project.final_mark
+                                : project.status === 'in_progress' ?
+                                'En cours'
+                                : 'Non commencé'
+                            }</Text>
+                        </View>
+                    ))}
+                </ScrollView>
+                <Text>Skills</Text>
+                <ScrollView>
+                    {user.cursus_users[1].skills.map((skill, index) => (
+                        <View style={styles.row}>
+                            <Text>{skill.name}</Text>
+                            <Text style={{color: 'green'}}>{skill.level}</Text>
+                        </View>
+                    ))}
+                </ScrollView>
+                </View>
 			<Button onPress={() => navigation.navigate('Authentification')}>
 				Se déconnecter
 			</Button>
@@ -82,7 +109,7 @@ export default Profilepage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    padding: 10,
     justifyContent: 'flex-start',
     flexDirection: 'column',
     gap: 20,
@@ -104,4 +131,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  scrollContainer: {
+    flex: 1,
+  },
+    scroll: {
+        flex: 1,
+        paddingBottom: 5,
+    },
 });
