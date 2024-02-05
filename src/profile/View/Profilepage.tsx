@@ -70,7 +70,7 @@ const Profilepage = ({navigation}) => {
 				Cet utilisateur a {user.correction_point} points de corrections
 			</Text>
             <View style={styles.scrollContainer}>
-                <Text>Projects</Text>
+                <Text style={{color: 'red'}}>Projects</Text>
                 <ScrollView>
                     {user.projects_users.map((project, index) => (
                         <View style={styles.row}>
@@ -85,7 +85,7 @@ const Profilepage = ({navigation}) => {
                         </View>
                     ))}
                 </ScrollView>
-                <Text>Skills</Text>
+                <Text style={{color: 'red'}}>Skills</Text>
                 <ScrollView>
                     {user.cursus_users[1].skills.map((skill, index) => (
                         <View style={styles.row}>
