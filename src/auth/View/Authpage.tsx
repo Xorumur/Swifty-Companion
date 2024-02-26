@@ -12,7 +12,7 @@ import {
 
 import {TextInput, Button} from 'react-native-paper';
 
-import { auth, retrieveTokens } from '../../services/auth'
+import { auth, retrieveTokens, logout } from '../../services/auth'
 
 const styles = StyleSheet.create({
   input: {
@@ -29,22 +29,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 30,
+	gap: 20,
   },
 });
 
 const Authpage = ({navigation}) => {
+
+	const [isAuthed, setIsAuthed] = useState(false);
+
 	const login = async () => {
 		const res = await auth();
 		if (res)
 			navigation.navigate("Profile")
 	};
 
+	const pressLogout = async () => {
+		setIsAuthed(false);
+		await logout();
+	};
+
 	// on mount
 	useEffect(() => {
 		const checkIfAuthed = async () => {
 			const tokens = await retrieveTokens();
-			if (tokens)
+			if (tokens) {
 				navigation.navigate("Profile")
+				setIsAuthed(true);
+			}
 		}
 		checkIfAuthed();
 	}, []);
@@ -54,6 +65,11 @@ const Authpage = ({navigation}) => {
       <Button mode="contained" onPress={login}>
 		Login using 42
       </Button>
+	  {isAuthed &&
+	  	<Button mode="contained" onPress={pressLogout}>
+			Logout
+		</Button>
+	  }
     </View>
   );
 };

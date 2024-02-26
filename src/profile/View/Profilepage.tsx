@@ -22,8 +22,8 @@ const Profilepage = ({navigation}) => {
 	async function onPressSearch() {
 		if (!hasChanged)
 			return;
-		const user = await searchQuery(search);
-		setUser(user);
+		const gotUser = await searchQuery(search);
+		setUser(gotUser);
 		setHasChanged(false);
 	}
 
@@ -60,12 +60,14 @@ const Profilepage = ({navigation}) => {
 					<Text>{user.login}</Text>
 					<Text>{user.email}</Text>
 				</View>
-				<View>
-					{/* Make level a round number */}
-					<Text>Level : {Math.floor(user.cursus_users[1].level)} , {Math.floor((user.cursus_users[1].level % 1) * 100)}%</Text>
-					<Text>Wallet : {user.wallet} $</Text>
-					<Text>Eval Points : {user.correction_point}</Text>
-				</View>
+				{!(user.cursus_users[1]) ? <View><Text>No data after piscine.</Text></View> : 
+					<View>
+						{/* Make level a round number */}
+						<Text>Level : {Math.floor(user.cursus_users[1].level)} , {Math.floor((user.cursus_users[1].level % 1) * 100)}%</Text>
+						<Text>Wallet : {user.wallet} $</Text>
+						<Text>Eval Points : {user.correction_point}</Text>
+					</View>
+				}
 			</View>
             <View style={styles.scrollContainer}>
                 <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>Projects</Text>
@@ -84,14 +86,16 @@ const Profilepage = ({navigation}) => {
                     ))}
                 </ScrollView>
                 <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>Skills</Text>
-                <ScrollView>
-                    {user.cursus_users[1].skills.map((skill, index) => (
-                        <View key={skill.name} style={styles.row}>
-                            <Text>{skill.name}</Text>
-                            <Text style={{color: 'green'}}>{skill.level}</Text>
-                        </View>
-                    ))}
-                </ScrollView>
+				{!(user.cursus_users[1]) ? <View><Text>No data after piscine.</Text></View> : 
+					<ScrollView>
+						{user.cursus_users[1].skills.map((skill, index) => (
+							<View key={skill.name} style={styles.row}>
+								<Text>{skill.name}</Text>
+								<Text style={{color: 'green'}}>{skill.level}</Text>
+							</View>
+						))}
+					</ScrollView>
+				}
                 </View>
 		</View>
 		)}
@@ -116,7 +120,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1, // Le TextInput prend toute la largeur disponible
-    height: 40,
+    height: 50,
     borderColor: 'gray',
     borderWidth: 1,
     marginRight: 10, // Marge à droite pour l'espace entre le TextInput et le Button

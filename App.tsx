@@ -22,6 +22,10 @@ import {Provider as PaperProvider} from 'react-native-paper';
 
 import Authpage from './src/auth/View/Authpage';
 import Profilepage from './src/profile/View/Profilepage';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 const Stack = createNativeStackNavigator();
 
